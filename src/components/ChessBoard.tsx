@@ -41,7 +41,12 @@ export function ChessBoard({ squares, onSquareClick }: ChessBoardProps) {
             {piece && (
               <PieceIcon
                 piece={piece}
-                className="relative z-10 size-[88%] object-contain drop-shadow-[0_2px_0_rgb(255_253_247_/_38%)]"
+                className={[
+                  'relative z-10 size-[88%] object-contain',
+                  piece.color === 'w'
+                    ? 'drop-shadow-[0_2px_1px_rgb(18_23_26_/_46%)]'
+                    : 'drop-shadow-[0_2px_0_rgb(255_253_247_/_38%)]',
+                ].join(' ')}
                 decorative
               />
             )}
