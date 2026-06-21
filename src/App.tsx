@@ -94,18 +94,20 @@ const bossPieceVariants = [
 
 function RulesPage({ onBack }: { onBack: () => void }) {
   return (
-    <main className="min-h-screen min-w-[320px] bg-[#f4f1e8] p-[clamp(16px,3vw,40px)] font-sans text-[#1f2933] antialiased max-[560px]:p-3.5">
-      <div className="mx-auto grid w-full max-w-6xl gap-8">
-        <header className="flex items-start justify-between gap-5 max-[640px]:flex-col max-[640px]:items-stretch">
+    <main className="min-h-screen min-w-[320px] bg-[var(--surface-app)] p-[clamp(16px,3vw,40px)] text-[var(--text-primary)] antialiased max-[560px]:p-[var(--space-3)]">
+      <div className="mx-auto grid w-full max-w-6xl gap-[var(--space-6)]">
+        <header className="flex items-start justify-between gap-[var(--space-5)] max-[640px]:flex-col max-[640px]:items-stretch">
           <div>
-            <p className="mb-1.5 text-[0.82rem] font-extrabold uppercase text-[#68727d]">Chess 2.0</p>
-            <h1 className="max-w-[820px] text-[clamp(2.35rem,7vw,5rem)] leading-[0.95] font-bold text-[#16202a]">
+            <p className="mb-[var(--space-2)] text-[0.82rem] leading-[1.2] font-extrabold text-[var(--text-secondary)] uppercase">
+              Rogue Chess
+            </p>
+            <h1 className="m-0 max-w-[820px] text-[clamp(2.35rem,7vw,5rem)] leading-[0.95] font-bold text-[var(--color-ink)]">
               Rules
             </h1>
           </div>
           <button
             type="button"
-            className="inline-flex min-h-[42px] cursor-pointer items-center justify-center gap-2 rounded-lg border border-[#cdd5d8] bg-white px-4 text-[0.95rem] font-bold text-[#23313d] hover:bg-[#e7f2f1] max-[640px]:w-full"
+            className="inline-flex min-h-[42px] cursor-pointer items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--surface-raised)] px-[var(--space-4)] text-[0.95rem] leading-[1.35] font-bold text-[var(--color-iron)] transition-[background-color,border-color,transform] duration-[var(--motion-fast)] hover:border-[var(--color-candle)] hover:bg-[rgb(241_200_75_/_16%)] active:translate-y-px max-[640px]:w-full"
             onClick={onBack}
           >
             <ArrowLeft size={18} />
@@ -113,70 +115,96 @@ function RulesPage({ onBack }: { onBack: () => void }) {
           </button>
         </header>
 
-        <section className="grid grid-cols-[minmax(0,1fr)_minmax(260px,340px)] gap-6 max-[860px]:grid-cols-1" aria-label="Chess rules">
-          <div className="grid gap-4">
+        <section
+          className="grid grid-cols-[minmax(0,1fr)_minmax(260px,340px)] gap-[var(--space-5)] max-[860px]:grid-cols-1"
+          aria-label="Chess rules"
+        >
+          <div className="grid gap-[var(--space-4)]">
             {ruleSections.map((section) => (
               <article
                 key={section.title}
-                className="rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]"
+                className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
               >
-                <h2 className="mb-2 text-[1.08rem] font-bold text-[#24303b]">{section.title}</h2>
-                <p className="text-[0.98rem] leading-7 text-[#46545e]">{section.body}</p>
+                <h2 className="mb-[var(--space-2)] text-[1.08rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                  {section.title}
+                </h2>
+                <p className="m-0 text-[0.98rem] leading-7 text-[var(--text-secondary)]">{section.body}</p>
               </article>
             ))}
           </div>
 
-          <aside className="grid self-start gap-4">
-            <section className="rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]" aria-label="Piece variants">
-              <h2 className="mb-4 text-[0.98rem] font-bold text-[#24303b]">Piece Variants</h2>
-              <div className="grid gap-3">
+          <aside className="grid self-start gap-[var(--space-4)]">
+            <section
+              className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
+              aria-label="Piece variants"
+            >
+              <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                Piece Variants
+              </h2>
+              <div className="grid gap-[var(--space-3)]">
                 {standardPieceVariants.map((variant) => (
-                  <div key={variant.name} className="grid grid-cols-[76px_minmax(0,1fr)] items-center gap-3">
+                  <div key={variant.name} className="grid grid-cols-[76px_minmax(0,1fr)] items-center gap-[var(--space-3)]">
                     <div className="flex items-center gap-1.5">
                       <PieceIcon piece={variant.piece} color="white" className="size-8 shrink-0" decorative />
                       <PieceIcon piece={variant.piece} color="black" className="size-8 shrink-0" decorative />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-[0.95rem] font-bold text-[#16202a]">
+                      <h3 className="m-0 text-[0.95rem] leading-[1.25] font-bold text-[var(--color-ink)]">
                         {variant.notation ? `${variant.notation} - ` : ''}
                         {variant.name}
                       </h3>
-                      <p className="text-[0.86rem] leading-5 text-[#46545e]">{variant.rule}</p>
+                      <p className="m-0 mt-[var(--space-1)] text-[0.86rem] leading-5 text-[var(--text-secondary)]">
+                        {variant.rule}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            <section className="rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]" aria-label="Boss piece variants">
-              <h2 className="mb-4 text-[0.98rem] font-bold text-[#24303b]">Boss Variants</h2>
-              <div className="grid gap-3">
+            <section
+              className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
+              aria-label="Boss piece variants"
+            >
+              <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                Boss Variants
+              </h2>
+              <div className="grid gap-[var(--space-3)]">
                 {bossPieceVariants.map((variant) => (
-                  <div key={variant.name} className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-3">
+                  <div key={variant.name} className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-[var(--space-3)]">
                     <PieceIcon piece={variant.piece} className="size-10 shrink-0" decorative />
                     <div className="min-w-0">
-                      <h3 className="text-[0.95rem] font-bold text-[#16202a]">{variant.name}</h3>
-                      <p className="text-[0.86rem] leading-5 text-[#46545e]">{variant.rule}</p>
+                      <h3 className="m-0 text-[0.95rem] leading-[1.25] font-bold text-[var(--color-ink)]">
+                        {variant.name}
+                      </h3>
+                      <p className="m-0 mt-[var(--space-1)] text-[0.86rem] leading-5 text-[var(--text-secondary)]">
+                        {variant.rule}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            <section className="rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]" aria-label="Notation guide">
-              <h2 className="mb-4 text-[0.98rem] font-bold text-[#24303b]">Notation Guide</h2>
+            <section
+              className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
+              aria-label="Notation guide"
+            >
+              <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                Notation Guide
+              </h2>
               <dl className="grid gap-3 text-[0.95rem]">
                 <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                  <dt className="font-bold text-[#16202a]">O-O</dt>
-                  <dd className="text-[#46545e]">Castle kingside</dd>
+                  <dt className="font-bold text-[var(--color-ink)]">O-O</dt>
+                  <dd className="m-0 text-[var(--text-secondary)]">Castle kingside</dd>
                 </div>
                 <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                  <dt className="font-bold text-[#16202a]">+</dt>
-                  <dd className="text-[#46545e]">Check</dd>
+                  <dt className="font-bold text-[var(--color-ink)]">+</dt>
+                  <dd className="m-0 text-[var(--text-secondary)]">Check</dd>
                 </div>
                 <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                  <dt className="font-bold text-[#16202a]">#</dt>
-                  <dd className="text-[#46545e]">Checkmate</dd>
+                  <dt className="font-bold text-[var(--color-ink)]">#</dt>
+                  <dd className="m-0 text-[var(--text-secondary)]">Checkmate</dd>
                 </div>
               </dl>
             </section>
@@ -196,8 +224,8 @@ export default function App() {
   }
 
   return (
-    <main className="grid min-h-screen min-w-[320px] grid-cols-[minmax(0,1fr)_minmax(280px,360px)] gap-8 bg-[#f4f1e8] p-[clamp(16px,3vw,40px)] font-sans text-[#1f2933] antialiased max-[920px]:grid-cols-1 max-[560px]:gap-5 max-[560px]:p-3.5">
-      <section className="grid min-w-0 grid-rows-[auto_minmax(0,1fr)]" aria-label="Chess game">
+    <main className="grid min-h-screen min-w-[320px] grid-cols-[minmax(0,1fr)_minmax(300px,380px)] gap-[var(--space-6)] bg-[var(--surface-app)] p-[clamp(16px,3vw,40px)] text-[var(--text-primary)] antialiased max-[1040px]:grid-cols-1 max-[560px]:gap-[var(--space-5)] max-[560px]:p-[var(--space-3)]">
+      <section className="grid min-w-0 grid-rows-[auto_minmax(0,1fr)] gap-[var(--space-4)]" aria-label="Chess game">
         <GameHeader
           status={chessGame.status}
           canUndo={chessGame.canUndo}
@@ -215,6 +243,9 @@ export default function App() {
         whiteMaterial={chessGame.whiteMaterial}
         blackMaterial={chessGame.blackMaterial}
         moveHistory={chessGame.moveHistory}
+        selectedPiece={chessGame.selectedPiece}
+        selectedSquare={chessGame.selectedSquare}
+        legalMoveCount={chessGame.legalMoveCount}
       />
     </main>
   );
