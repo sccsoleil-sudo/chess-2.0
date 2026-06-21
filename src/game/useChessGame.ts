@@ -28,6 +28,7 @@ export function useChessGame() {
   const captured = useMemo(() => getCapturedPieces(moveHistory), [moveHistory]);
   const whiteMaterial = useMemo(() => materialScore(captured.w), [captured]);
   const blackMaterial = useMemo(() => materialScore(captured.b), [captured]);
+  const selectedPiece = selectedSquare ? (game.get(selectedSquare) ?? null) : null;
 
   function commitGameState(nextState: GameState) {
     setGameState(nextState);
@@ -72,8 +73,11 @@ export function useChessGame() {
     canUndo: gameState.past.length > 0,
     captured,
     currentTurn: game.turn() as Color,
+    legalMoveCount: legalTargets.size,
     moveHistory,
     resetGame,
+    selectedPiece,
+    selectedSquare,
     status: getGameMessage(gameState),
     toggleBoard,
     undoMove,
