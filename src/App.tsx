@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { ChessBoard } from './components/ChessBoard';
 import { GameDetails } from './components/GameDetails';
 import { GameHeader } from './components/GameHeader';
+import { PieceIcon } from './components/PieceIcon';
 import { useChessGame } from './game/useChessGame';
 
 type View = 'game' | 'rules';
@@ -33,6 +34,63 @@ const ruleSections = [
     body: 'Select one of your pieces to reveal legal targets, then select a highlighted square to move. Use the controls to undo, flip the board, reset, or return to this rules page.',
   },
 ];
+
+const standardPieceVariants = [
+  {
+    notation: 'K',
+    name: 'King',
+    piece: 'king',
+    rule: 'Moves one square in any direction.',
+  },
+  {
+    notation: 'Q',
+    name: 'Queen',
+    piece: 'queen',
+    rule: 'Moves any distance along ranks, files, or diagonals.',
+  },
+  {
+    notation: 'R',
+    name: 'Rook',
+    piece: 'rook',
+    rule: 'Moves any distance along ranks or files.',
+  },
+  {
+    notation: 'B',
+    name: 'Bishop',
+    piece: 'bishop',
+    rule: 'Moves any distance along diagonals.',
+  },
+  {
+    notation: 'N',
+    name: 'Knight',
+    piece: 'knight',
+    rule: 'Jumps in an L shape.',
+  },
+  {
+    notation: '',
+    name: 'Pawn',
+    piece: 'pawn',
+    rule: 'Moves forward and captures diagonally.',
+  },
+] as const;
+
+const bossPieceVariants = [
+  {
+    name: 'The Iron Rook',
+    piece: 'iron-rook',
+    rule: 'A rook boss that summons pawn shields and becomes vulnerable after long moves.',
+  },
+  {
+    name: 'The Hydra Queen',
+    piece: 'hydra-queen',
+    rule: 'A queen boss that splits into bishops, then pawns, as it is defeated.',
+  },
+  {
+    name: 'The Lich King',
+    piece: 'lich-king',
+    rule: 'A king boss that revives pawns and must be isolated before capture.',
+  },
+] as const;
 
 function RulesPage({ onBack }: { onBack: () => void }) {
   return (
@@ -75,44 +133,81 @@ function RulesPage({ onBack }: { onBack: () => void }) {
             ))}
           </div>
 
-          <aside className="self-start rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]">
-            <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
-              Notation Guide
-            </h2>
-            <dl className="grid gap-3 text-[0.95rem]">
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">K</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">King</dd>
+          <aside className="grid self-start gap-[var(--space-4)]">
+            <section
+              className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
+              aria-label="Piece variants"
+            >
+              <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                Piece Variants
+              </h2>
+              <div className="grid gap-[var(--space-3)]">
+                {standardPieceVariants.map((variant) => (
+                  <div key={variant.name} className="grid grid-cols-[76px_minmax(0,1fr)] items-center gap-[var(--space-3)]">
+                    <div className="flex items-center gap-1.5">
+                      <PieceIcon piece={variant.piece} color="white" className="size-8 shrink-0" decorative />
+                      <PieceIcon piece={variant.piece} color="black" className="size-8 shrink-0" decorative />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="m-0 text-[0.95rem] leading-[1.25] font-bold text-[var(--color-ink)]">
+                        {variant.notation ? `${variant.notation} - ` : ''}
+                        {variant.name}
+                      </h3>
+                      <p className="m-0 mt-[var(--space-1)] text-[0.86rem] leading-5 text-[var(--text-secondary)]">
+                        {variant.rule}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">Q</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Queen</dd>
+            </section>
+
+            <section
+              className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
+              aria-label="Boss piece variants"
+            >
+              <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                Boss Variants
+              </h2>
+              <div className="grid gap-[var(--space-3)]">
+                {bossPieceVariants.map((variant) => (
+                  <div key={variant.name} className="grid grid-cols-[44px_minmax(0,1fr)] items-center gap-[var(--space-3)]">
+                    <PieceIcon piece={variant.piece} className="size-10 shrink-0" decorative />
+                    <div className="min-w-0">
+                      <h3 className="m-0 text-[0.95rem] leading-[1.25] font-bold text-[var(--color-ink)]">
+                        {variant.name}
+                      </h3>
+                      <p className="m-0 mt-[var(--space-1)] text-[0.86rem] leading-5 text-[var(--text-secondary)]">
+                        {variant.rule}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">R</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Rook</dd>
-              </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">B</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Bishop</dd>
-              </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">N</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Knight</dd>
-              </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">O-O</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Castle kingside</dd>
-              </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">+</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Check</dd>
-              </div>
-              <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
-                <dt className="font-bold text-[var(--color-ink)]">#</dt>
-                <dd className="m-0 text-[var(--text-secondary)]">Checkmate</dd>
-              </div>
-            </dl>
+            </section>
+
+            <section
+              className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]"
+              aria-label="Notation guide"
+            >
+              <h2 className="mb-[var(--space-4)] text-[0.98rem] leading-[1.25] font-bold text-[var(--color-iron)]">
+                Notation Guide
+              </h2>
+              <dl className="grid gap-3 text-[0.95rem]">
+                <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
+                  <dt className="font-bold text-[var(--color-ink)]">O-O</dt>
+                  <dd className="m-0 text-[var(--text-secondary)]">Castle kingside</dd>
+                </div>
+                <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
+                  <dt className="font-bold text-[var(--color-ink)]">+</dt>
+                  <dd className="m-0 text-[var(--text-secondary)]">Check</dd>
+                </div>
+                <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-3">
+                  <dt className="font-bold text-[var(--color-ink)]">#</dt>
+                  <dd className="m-0 text-[var(--text-secondary)]">Checkmate</dd>
+                </div>
+              </dl>
+            </section>
           </aside>
         </section>
       </div>

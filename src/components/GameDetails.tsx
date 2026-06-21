@@ -3,11 +3,11 @@ import type { Color, Move, Piece, Square } from 'chess.js';
 import type { ReactNode } from 'react';
 import {
   formatSide,
-  pieceGlyphs,
   sortCapturedPieces,
   type CapturedPieces,
   type CapturedPiece,
 } from '../game/chessLogic';
+import { PieceIcon } from './PieceIcon';
 
 type GameDetailsProps = {
   currentTurn: Color;
@@ -27,14 +27,19 @@ function CapturedRow({ label, pieces, advantage }: { label: string; pieces: Capt
     <div className="grid min-h-[36px] grid-cols-[52px_minmax(0,1fr)_auto] items-center gap-[var(--space-2)] text-[0.92rem] leading-[1.35]">
       <span className="font-bold text-[var(--color-iron)]">{label}</span>
       <div
-        className="flex min-w-0 flex-wrap gap-0.5 font-['Times_New_Roman',Georgia,serif] text-[1.45rem] leading-none text-[var(--color-ink)]"
+        className="flex min-w-0 flex-wrap gap-1"
         aria-label={`${label} captured pieces`}
       >
         {sortedPieces.length === 0 ? (
           <span className="font-sans text-[0.9rem] leading-[1.35] text-[var(--text-secondary)]">None</span>
         ) : (
           sortedPieces.map((piece, index) => (
-            <span key={`${piece.type}-${index}`}>{pieceGlyphs[piece.color][piece.type]}</span>
+            <PieceIcon
+              key={`${piece.type}-${index}`}
+              piece={piece}
+              className="size-7 object-contain"
+              decorative
+            />
           ))
         )}
       </div>
@@ -135,8 +140,12 @@ export function GameDetails({
 
       <Panel title="Selected Piece" icon={<Shield size={17} />}>
         <div className="grid grid-cols-[48px_minmax(0,1fr)] items-center gap-[var(--space-3)]">
-          <span className="grid size-12 place-items-center rounded-[var(--radius-md)] border border-[rgb(38_53_66_/_16%)] bg-[var(--surface-raised)] font-['Times_New_Roman',Georgia,serif] text-[2.1rem] leading-none text-[var(--color-ink)]">
-            {selectedPiece ? pieceGlyphs[selectedPiece.color][selectedPiece.type] : '·'}
+          <span className="grid size-12 place-items-center rounded-[var(--radius-md)] border border-[rgb(38_53_66_/_16%)] bg-[var(--surface-raised)] text-[var(--color-ink)]">
+            {selectedPiece ? (
+              <PieceIcon piece={selectedPiece} className="size-10 object-contain" decorative />
+            ) : (
+              <span className="text-[2.1rem] leading-none">·</span>
+            )}
           </span>
           <div className="min-w-0">
             <strong className="block text-[1rem] leading-[1.25] text-[var(--color-ink)]">{pieceName(selectedPiece)}</strong>

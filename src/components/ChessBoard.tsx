@@ -1,5 +1,6 @@
 import type { Square } from 'chess.js';
-import { formatSide, pieceGlyphs, type BoardSquareState } from '../game/chessLogic';
+import { formatSide, type BoardSquareState } from '../game/chessLogic';
+import { PieceIcon } from './PieceIcon';
 
 type ChessBoardProps = {
   squares: BoardSquareState[];
@@ -37,17 +38,13 @@ export function ChessBoard({ squares, onSquareClick }: ChessBoardProps) {
             role="gridcell"
             aria-label={`${square}${piece ? ` ${formatSide(piece.color)} ${piece.type}` : ''}`}
           >
-            <span
-              className={[
-                "relative z-10 grid size-full place-items-center font-['Times_New_Roman',Georgia,serif] text-[clamp(2.2rem,8vw,5.2rem)] leading-none [text-shadow:0_2px_0_rgb(255_253_247_/_46%)]",
-                piece?.color === 'b' ? 'text-[var(--color-ink)]' : 'text-[rgb(255_253_247)]',
-                piece?.color === 'w' ? '[text-shadow:0_2px_0_rgb(18_23_26_/_50%)]' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              {piece ? pieceGlyphs[piece.color][piece.type] : ''}
-            </span>
+            {piece && (
+              <PieceIcon
+                piece={piece}
+                className="relative z-10 size-[88%] object-contain drop-shadow-[0_2px_0_rgb(255_253_247_/_38%)]"
+                decorative
+              />
+            )}
             {coordinate && (
               <span className="absolute right-1.5 bottom-1 z-10 text-[clamp(0.62rem,1.6vw,0.82rem)] leading-[1.2] font-extrabold text-[rgb(18_23_26_/_58%)]">
                 {coordinate}

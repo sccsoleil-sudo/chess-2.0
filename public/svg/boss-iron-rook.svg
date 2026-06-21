@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>The Iron Rook</title>
+  <g fill="#263542" stroke="#F4F1E8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 11h8v7h6v-7h2v7h6v-7h8v18H17z"/>
+    <path d="M21 29h22l3 19H18z"/>
+    <path d="M18 48h28"/>
+    <path d="M14 55h36"/>
+    <path d="M11 59h42"/>
+  </g>
+  <g fill="none" stroke="#B8892E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M26 34h12"/>
+    <path d="M25 40h14"/>
+    <path d="M32 30v16"/>
+  </g>
+</svg>
