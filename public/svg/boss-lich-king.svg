@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>The Lich King</title>
+  <g fill="#12171A" stroke="#F4F1E8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 7v14"/>
+    <path d="M25.5 13.5h13"/>
+    <path d="M22 30c0-6.2 4.4-10.7 10-10.7S42 23.8 42 30c0 4.5-2.2 7.4-5 9.8H27c-2.8-2.4-5-5.3-5-9.8z"/>
+    <path d="M23.5 39.8h17l4 9.2h-25z"/>
+    <path d="M18 54h28"/>
+    <path d="M14 58h36"/>
+  </g>
+  <g fill="none" stroke="#8F2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M27.5 30h.1"/>
+    <path d="M36.5 30h.1"/>
+    <path d="M29 36c2 1.4 4 1.4 6 0"/>
+    <path d="M48 25c4 5 4 10 0 15"/>
+  </g>
+</svg>

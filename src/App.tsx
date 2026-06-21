@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Chess, type Color, type Move, type PieceSymbol, type Square } from 'chess.js';
 import { RotateCcw, RotateCw, SkipBack, Trophy } from 'lucide-react';
+import { PieceIcon } from './components/PieceIcon';
 
 type Piece = {
   color: Color;
@@ -9,11 +10,6 @@ type Piece = {
 
 type CapturedPiece = Piece;
 type CapturedPieces = Record<Color, CapturedPiece[]>;
-
-const pieceGlyphs: Record<Color, Record<PieceSymbol, string>> = {
-  w: { p: '♙', n: '♘', b: '♗', r: '♖', q: '♕', k: '♔' },
-  b: { p: '♟', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚' },
-};
 
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const;
 const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'] as const;
@@ -75,14 +71,19 @@ function CapturedRow({ label, pieces, advantage }: { label: string; pieces: Capt
     <div className="grid min-h-[34px] grid-cols-[56px_minmax(0,1fr)_auto] items-center gap-2.5 text-[0.92rem]">
       <span>{label}</span>
       <div
-        className="flex min-w-0 flex-wrap gap-0.5 font-['Times_New_Roman',Georgia,serif] text-[1.45rem] leading-none"
+        className="flex min-w-0 flex-wrap gap-1"
         aria-label={`${label} captured pieces`}
       >
         {sortedPieces.length === 0 ? (
           <span className="text-[0.9rem] text-[#7a858d]">None</span>
         ) : (
           sortedPieces.map((piece, index) => (
-            <span key={`${piece.type}-${index}`}>{pieceGlyphs[piece.color][piece.type]}</span>
+            <PieceIcon
+              key={`${piece.type}-${index}`}
+              piece={piece}
+              className="size-7 object-contain"
+              decorative
+            />
           ))
         )}
       </div>
@@ -217,9 +218,13 @@ export default function App() {
                   role="gridcell"
                   aria-label={`${square}${piece ? ` ${formatSide(piece.color)} ${piece.type}` : ''}`}
                 >
-                  <span className="relative z-10 grid size-full place-items-center font-['Times_New_Roman',Georgia,serif] text-[clamp(2.2rem,8vw,5.2rem)] leading-none text-[#111820] [text-shadow:0_2px_0_rgb(255_255_255_/_45%)]">
-                    {piece ? pieceGlyphs[piece.color][piece.type] : ''}
-                  </span>
+                  {piece && (
+                    <PieceIcon
+                      piece={piece}
+                      className="relative z-10 size-[88%] object-contain drop-shadow-[0_2px_0_rgb(255_255_255_/_38%)]"
+                      decorative
+                    />
+                  )}
                   {(square[0] === (flipped ? 'h' : 'a') || square[1] === (flipped ? '8' : '1')) && (
                     <span className="absolute right-1.5 bottom-1 text-[clamp(0.62rem,1.6vw,0.82rem)] font-extrabold text-[rgb(20_28_35_/_58%)]">
                       {square[0] === (flipped ? 'h' : 'a') ? square[1] : ''}
