@@ -20,11 +20,14 @@ function CapturedRow({ label, pieces, advantage }: { label: string; pieces: Capt
   const sortedPieces = sortCapturedPieces(pieces);
 
   return (
-    <div className="captured-row">
+    <div className="grid min-h-[34px] grid-cols-[56px_minmax(0,1fr)_auto] items-center gap-2.5 text-[0.92rem]">
       <span>{label}</span>
-      <div className="captured-pieces" aria-label={`${label} captured pieces`}>
+      <div
+        className="flex min-w-0 flex-wrap gap-0.5 font-['Times_New_Roman',Georgia,serif] text-[1.45rem] leading-none"
+        aria-label={`${label} captured pieces`}
+      >
         {sortedPieces.length === 0 ? (
-          <span className="muted">None</span>
+          <span className="text-[0.9rem] text-[#7a858d]">None</span>
         ) : (
           sortedPieces.map((piece, index) => (
             <span key={`${piece.type}-${index}`}>{pieceGlyphs[piece.color][piece.type]}</span>
@@ -38,31 +41,41 @@ function CapturedRow({ label, pieces, advantage }: { label: string; pieces: Capt
 
 export function GameDetails({ currentTurn, captured, whiteMaterial, blackMaterial, moveHistory }: GameDetailsProps) {
   return (
-    <aside className="side-panel" aria-label="Game details">
-      <div className="panel-section current-player">
+    <aside className="flex min-w-0 flex-col gap-4 self-start max-[920px]:self-stretch" aria-label="Game details">
+      <div className="flex items-center gap-3 rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]">
         <Trophy size={20} />
         <div>
-          <span>Current turn</span>
-          <strong>{formatSide(currentTurn)}</strong>
+          <span className="block text-[0.82rem] font-bold text-[#68727d]">Current turn</span>
+          <strong className="block text-[1.35rem] text-[#111820]">{formatSide(currentTurn)}</strong>
         </div>
       </div>
 
-      <div className="panel-section">
-        <h2>Captured</h2>
-        <CapturedRow label="White" pieces={captured.w} advantage={whiteMaterial - blackMaterial} />
-        <CapturedRow label="Black" pieces={captured.b} advantage={blackMaterial - whiteMaterial} />
+      <div className="rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]">
+        <h2 className="mb-4 text-[0.98rem] font-bold text-[#24303b]">Captured</h2>
+        <div className="space-y-2.5">
+          <CapturedRow label="White" pieces={captured.w} advantage={whiteMaterial - blackMaterial} />
+          <CapturedRow label="Black" pieces={captured.b} advantage={blackMaterial - whiteMaterial} />
+        </div>
       </div>
 
-      <div className="panel-section move-list-section">
-        <h2>Moves</h2>
-        <ol className="move-list">
+      <div className="max-h-[min(52vh,520px)] overflow-auto rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]">
+        <h2 className="mb-4 text-[0.98rem] font-bold text-[#24303b]">Moves</h2>
+        <ol className="m-0 grid list-none grid-cols-2 gap-2 p-0 max-[560px]:grid-cols-1">
           {moveHistory.length === 0 ? (
-            <li className="muted">Start the game</li>
+            <li className="flex min-h-[34px] items-center gap-2 rounded-md bg-[#eef5f2] px-[9px] py-[7px] text-[0.9rem] text-[#7a858d]">
+              Start the game
+            </li>
           ) : (
             moveHistory.map((move, index) => (
-              <li key={`${move.from}-${move.to}-${index}`}>
-                <span>{Math.floor(index / 2) + 1}{index % 2 === 0 ? '.' : '...'}</span>
-                <strong>{move.san}</strong>
+              <li
+                key={`${move.from}-${move.to}-${index}`}
+                className="flex min-h-[34px] items-center gap-2 rounded-md bg-[#eef5f2] px-[9px] py-[7px]"
+              >
+                <span className="text-[0.78rem] font-extrabold text-[#64717a]">
+                  {Math.floor(index / 2) + 1}
+                  {index % 2 === 0 ? '.' : '...'}
+                </span>
+                <strong className="text-[0.95rem] text-[#1c2a34]">{move.san}</strong>
               </li>
             ))
           )}
