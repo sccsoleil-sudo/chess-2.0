@@ -1,15 +1,18 @@
-import { RotateCcw, RotateCw, SkipBack } from 'lucide-react';
+import { BookOpen, RotateCcw, RotateCw, SkipBack } from 'lucide-react';
 
 type GameHeaderProps = {
   status: string;
   canUndo: boolean;
+  onOpenRules: () => void;
   onUndo: () => void;
   onFlipBoard: () => void;
   onReset: () => void;
 };
 
-export function GameHeader({ status, canUndo, onUndo, onFlipBoard, onReset }: GameHeaderProps) {
+export function GameHeader({ status, canUndo, onOpenRules, onUndo, onFlipBoard, onReset }: GameHeaderProps) {
   const isWarning = status.toLowerCase().includes('check');
+  const controlButtonClass =
+    'grid size-[42px] cursor-pointer place-items-center rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--surface-raised)] text-[var(--color-iron)] transition-[background-color,border-color,color,transform] duration-[var(--motion-fast)] hover:enabled:border-[var(--color-candle)] hover:enabled:bg-[rgb(241_200_75_/_16%)] active:enabled:translate-y-px disabled:cursor-not-allowed disabled:text-[var(--color-fog)] max-[560px]:size-10';
 
   return (
     <div className="flex items-start justify-between gap-[var(--space-5)] max-[560px]:flex-col max-[560px]:items-stretch max-[560px]:gap-[var(--space-3)]">
@@ -36,7 +39,16 @@ export function GameHeader({ status, canUndo, onUndo, onFlipBoard, onReset }: Ga
       <div className="flex shrink-0 gap-[var(--space-2)]" aria-label="Game controls">
         <button
           type="button"
-          className="grid size-[42px] cursor-pointer place-items-center rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--surface-raised)] text-[var(--color-iron)] transition-[background-color,border-color,color,transform] duration-[var(--motion-fast)] hover:enabled:border-[var(--color-candle)] hover:enabled:bg-[rgb(241_200_75_/_16%)] active:enabled:translate-y-px disabled:cursor-not-allowed disabled:text-[var(--color-fog)] max-[560px]:size-10"
+          className={controlButtonClass}
+          onClick={onOpenRules}
+          title="Open rules"
+          aria-label="Open rules"
+        >
+          <BookOpen size={18} />
+        </button>
+        <button
+          type="button"
+          className={controlButtonClass}
           onClick={onUndo}
           disabled={!canUndo}
           title="Undo last move"
@@ -46,7 +58,7 @@ export function GameHeader({ status, canUndo, onUndo, onFlipBoard, onReset }: Ga
         </button>
         <button
           type="button"
-          className="grid size-[42px] cursor-pointer place-items-center rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--surface-raised)] text-[var(--color-iron)] transition-[background-color,border-color,color,transform] duration-[var(--motion-fast)] hover:enabled:border-[var(--color-candle)] hover:enabled:bg-[rgb(241_200_75_/_16%)] active:enabled:translate-y-px disabled:cursor-not-allowed disabled:text-[var(--color-fog)] max-[560px]:size-10"
+          className={controlButtonClass}
           onClick={onFlipBoard}
           title="Flip board"
           aria-label="Flip board"
@@ -55,7 +67,7 @@ export function GameHeader({ status, canUndo, onUndo, onFlipBoard, onReset }: Ga
         </button>
         <button
           type="button"
-          className="grid size-[42px] cursor-pointer place-items-center rounded-[var(--radius-md)] border border-[var(--border-soft)] bg-[var(--surface-raised)] text-[var(--color-iron)] transition-[background-color,border-color,color,transform] duration-[var(--motion-fast)] hover:enabled:border-[var(--color-candle)] hover:enabled:bg-[rgb(241_200_75_/_16%)] active:enabled:translate-y-px disabled:cursor-not-allowed disabled:text-[var(--color-fog)] max-[560px]:size-10"
+          className={controlButtonClass}
           onClick={onReset}
           title="Reset game"
           aria-label="Reset game"
