@@ -17,3 +17,7 @@ npm install
 npm run dev
 npm run build
 ```
+
+## Design
+
+- [Rogue Chess Game Design Document](ROGUELIKE_CHESS_GDD.md)
