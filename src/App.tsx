@@ -182,7 +182,7 @@ export default function App() {
 
         <div className="grid min-h-0 place-items-center">
           <div
-            className="grid aspect-square w-[min(82vh,100%)] max-w-[760px] grid-cols-8 overflow-hidden rounded-lg border-[10px] border-[#263542] shadow-[0_22px_45px_rgb(32_38_46_/_18%)] max-[920px]:w-[min(92vw,680px)] max-[560px]:border-[6px]"
+            className="grid aspect-square w-[min(82vh,100%)] max-w-[760px] grid-cols-8 grid-rows-[repeat(8,minmax(0,1fr))] overflow-hidden rounded-lg border-[10px] border-[#263542] shadow-[0_22px_45px_rgb(32_38_46_/_18%)] max-[920px]:w-[min(92vw,680px)] max-[560px]:border-[6px]"
             role="grid"
             aria-label="Chess board"
           >
@@ -217,7 +217,7 @@ export default function App() {
                   role="gridcell"
                   aria-label={`${square}${piece ? ` ${formatSide(piece.color)} ${piece.type}` : ''}`}
                 >
-                  <span className="relative z-10 font-['Times_New_Roman',Georgia,serif] text-[clamp(2.2rem,8vw,5.2rem)] leading-none text-[#111820] [text-shadow:0_2px_0_rgb(255_255_255_/_45%)]">
+                  <span className="relative z-10 grid size-full place-items-center font-['Times_New_Roman',Georgia,serif] text-[clamp(2.2rem,8vw,5.2rem)] leading-none text-[#111820] [text-shadow:0_2px_0_rgb(255_255_255_/_45%)]">
                     {piece ? pieceGlyphs[piece.color][piece.type] : ''}
                   </span>
                   {(square[0] === (flipped ? 'h' : 'a') || square[1] === (flipped ? '8' : '1')) && (
