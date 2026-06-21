@@ -21,3 +21,4 @@ npm run build
 ## Design
 
 - [Rogue Chess Game Design Document](ROGUELIKE_CHESS_GDD.md)
+- [Rogue Chess Brand And Design System](ROGUE_CHESS_BRAND_DESIGN_SYSTEM.md)
