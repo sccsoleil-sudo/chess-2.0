@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react';
+import type { AriaRole, CSSProperties } from 'react';
 
 export type PieceSide = 'w' | 'b' | 'white' | 'black';
 export type StandardPieceType =
@@ -23,13 +23,17 @@ type PieceIconDetails = {
   label: string;
 };
 
-type PieceIconProps = Omit<SVGProps<SVGSVGElement>, 'color'> & {
+type PieceIconProps = {
   piece: PieceIconInput;
   color?: PieceSide | string;
   strokeColor?: string;
   accentColor?: string;
   alt?: string;
   decorative?: boolean;
+  className?: string;
+  id?: string;
+  role?: AriaRole;
+  style?: CSSProperties;
 };
 
 type NormalizedPiece = {
@@ -59,11 +63,6 @@ const bossPieceLabels: Record<BossPieceType, string> = {
   'iron-rook': 'The Iron Rook',
   'hydra-queen': 'The Hydra Queen',
   'lich-king': 'The Lich King',
-};
-
-const sideColors: Record<'white' | 'black', { fill: string; stroke: string }> = {
-  white: { fill: '#FFFDF7', stroke: '#12171A' },
-  black: { fill: '#12171A', stroke: '#F4F1E8' },
 };
 
 const bossColors: Record<BossPieceType, { fill: string; stroke: string; accent: string }> = {
@@ -100,40 +99,21 @@ function isBossPiece(type: PieceIconType): type is BossPieceType {
   return type === 'iron-rook' || type === 'hydra-queen' || type === 'lich-king';
 }
 
-function getPaint(piece: NormalizedPiece, color: PieceSide | string | undefined, strokeColor?: string, accentColor?: string) {
-  if (isBossPiece(piece.type)) {
-    const bossPaint = bossColors[piece.type];
+function getBossPaint(type: BossPieceType, color: PieceSide | string | undefined, strokeColor?: string, accentColor?: string) {
+  const bossPaint = bossColors[type];
 
-    if (color && !isSideColor(color)) {
-      return {
-        fill: color,
-        stroke: strokeColor ?? bossPaint.stroke,
-        accent: accentColor ?? bossPaint.accent,
-      };
-    }
-
+  if (color && !isSideColor(color)) {
     return {
-      fill: bossPaint.fill,
+      fill: color,
       stroke: strokeColor ?? bossPaint.stroke,
       accent: accentColor ?? bossPaint.accent,
     };
   }
 
-  if (color && !isSideColor(color)) {
-    return {
-      fill: color,
-      stroke: strokeColor ?? '#12171A',
-      accent: accentColor ?? '#B8892E',
-    };
-  }
-
-  const side = normalizeSide(isSideColor(color) ? color : piece.side);
-  const sidePaint = sideColors[side];
-
   return {
-    fill: sidePaint.fill,
-    stroke: strokeColor ?? sidePaint.stroke,
-    accent: accentColor ?? '#B8892E',
+    fill: bossPaint.fill,
+    stroke: strokeColor ?? bossPaint.stroke,
+    accent: accentColor ?? bossPaint.accent,
   };
 }
 
@@ -152,62 +132,19 @@ export function getPieceIconDetails(piece: PieceIconInput): PieceIconDetails {
   }
 
   const pieceName = normalizeStandardType(normalized.type);
-  const colorLabel = normalized.side ? `${normalizeSide(normalized.side) === 'white' ? 'White' : 'Black'} ` : '';
+  const side = normalizeSide(normalized.side);
 
   return {
-    src: `/svg/${pieceName}.svg`,
-    label: `${colorLabel}${pieceName}`,
+    src: `/pieces/${side}-${pieceName}.png`,
+    label: `${side === 'white' ? 'White' : 'Black'} ${pieceName}`,
   };
 }
 
-function PawnIcon({ fill, stroke }: { fill: string; stroke: string }) {
-  return (
-    <g fill={fill} stroke={stroke} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="32" cy="16" r="8.5" />
-      <path d="M24.5 27.5h15l3.8 17h-22.6z" />
-      <path d="M19.5 44.5h25" />
-      <path d="M15.5 53.5c4.6-4.2 28.4-4.2 33 0z" />
-      <path d="M13 56.5h38" />
-    </g>
-  );
-}
+function getStandardPieceSrc(piece: NormalizedPiece, color: PieceSide | string | undefined) {
+  const pieceName = normalizeStandardType(piece.type as StandardPieceType);
+  const side = normalizeSide(isSideColor(color) ? color : piece.side);
 
-function KnightIcon({ fill, stroke }: { fill: string; stroke: string }) {
-  return (
-    <g fill={fill} stroke={stroke} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 53.5h31" />
-      <path d="M22 46.5h25" />
-      <path d="M27.5 46.5c.2-7.2 2.5-12.1 7-16.5l-8.8 1.8c-2.6.5-4.8-.4-6.6-2.6l-3.8-4.8 4.5-2.8 5.2 2.8 2.4-8.7c.8-2.9 3.4-4.9 6.4-4.9h7.8l-2.2 7.4 6.4 6.5c4.3 4.4 5.8 10 4.4 16.6l-1.1 5.2z" />
-      <path d="M37 18.2l-5.2 4.9" />
-      <path d="M32 13.2l-2.5 5.1" />
-      <circle cx="39.5" cy="24.5" r="1.7" fill={stroke} stroke="none" />
-    </g>
-  );
-}
-
-function BishopIcon({ fill, stroke }: { fill: string; stroke: string }) {
-  return (
-    <g fill={fill} stroke={stroke} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="32" cy="10.5" r="3.8" />
-      <path d="M21.5 32c0-8.2 5.5-13.2 10.5-17.4 5 4.2 10.5 9.2 10.5 17.4 0 5.3-4.7 9.8-10.5 9.8S21.5 37.3 21.5 32z" />
-      <path d="M39.5 22.5 27 35" />
-      <path d="M24 42h16l3.5 7.5h-23z" />
-      <path d="M17 53.5h30" />
-      <path d="M14 57h36" />
-    </g>
-  );
-}
-
-function RookIcon({ fill, stroke }: { fill: string; stroke: string }) {
-  return (
-    <g fill={fill} stroke={stroke} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 13h8v6h10v-6h8v16H19z" />
-      <path d="M22.5 29h19l2.5 18H20z" />
-      <path d="M20 47h24" />
-      <path d="M16 54.5h32" />
-      <path d="M13 58h38" />
-    </g>
-  );
+  return `/pieces/${side}-${pieceName}.png`;
 }
 
 function QueenIcon({ fill, stroke }: { fill: string; stroke: string }) {
@@ -283,18 +220,6 @@ function BossIcon({ type, fill, stroke, accent }: { type: BossPieceType; fill: s
   );
 }
 
-function StandardIcon({ type, fill, stroke }: { type: StandardPieceType; fill: string; stroke: string }) {
-  const pieceName = normalizeStandardType(type);
-
-  if (pieceName === 'pawn') return <PawnIcon fill={fill} stroke={stroke} />;
-  if (pieceName === 'knight') return <KnightIcon fill={fill} stroke={stroke} />;
-  if (pieceName === 'bishop') return <BishopIcon fill={fill} stroke={stroke} />;
-  if (pieceName === 'rook') return <RookIcon fill={fill} stroke={stroke} />;
-  if (pieceName === 'queen') return <QueenIcon fill={fill} stroke={stroke} />;
-
-  return <KingIcon fill={fill} stroke={stroke} />;
-}
-
 export function PieceIcon({
   piece,
   color,
@@ -303,16 +228,34 @@ export function PieceIcon({
   alt,
   decorative = false,
   role,
-  ...svgProps
+  ...iconProps
 }: PieceIconProps) {
   const normalized = normalizePiece(piece);
+
+  if (!isBossPiece(normalized.type)) {
+    const side = normalizeSide(isSideColor(color) ? color : normalized.side);
+    const pieceName = normalizeStandardType(normalized.type as StandardPieceType);
+    const standardTitle = alt ?? `${side === 'white' ? 'White' : 'Black'} ${pieceName}`;
+
+    return (
+      <img
+        {...iconProps}
+        src={getStandardPieceSrc(normalized, color)}
+        alt={decorative ? '' : standardTitle}
+        aria-hidden={decorative ? true : undefined}
+        role={decorative ? undefined : role}
+        draggable={false}
+      />
+    );
+  }
+
   const details = getPieceIconDetails(piece);
-  const paint = getPaint(normalized, color, strokeColor, accentColor);
+  const paint = getBossPaint(normalized.type, color, strokeColor, accentColor);
   const title = alt ?? details.label;
 
   return (
     <svg
-      {...svgProps}
+      {...iconProps}
       viewBox="0 0 64 64"
       role={decorative ? undefined : (role ?? 'img')}
       aria-hidden={decorative ? true : undefined}
