@@ -1,14 +1,15 @@
-import { RotateCcw, RotateCw, SkipBack } from 'lucide-react';
+import { BookOpen, RotateCcw, RotateCw, SkipBack } from 'lucide-react';
 
 type GameHeaderProps = {
   status: string;
   canUndo: boolean;
+  onOpenRules: () => void;
   onUndo: () => void;
   onFlipBoard: () => void;
   onReset: () => void;
 };
 
-export function GameHeader({ status, canUndo, onUndo, onFlipBoard, onReset }: GameHeaderProps) {
+export function GameHeader({ status, canUndo, onOpenRules, onUndo, onFlipBoard, onReset }: GameHeaderProps) {
   return (
     <div className="mb-5 flex items-start justify-between gap-5 max-[560px]:flex-col max-[560px]:items-stretch max-[560px]:gap-3.5">
       <div>
@@ -18,6 +19,14 @@ export function GameHeader({ status, canUndo, onUndo, onFlipBoard, onReset }: Ga
         </h1>
       </div>
       <div className="flex gap-2" aria-label="Game controls">
+        <button
+          type="button"
+          className="grid size-[42px] cursor-pointer place-items-center rounded-lg border border-[#cdd5d8] bg-white text-[#23313d] hover:enabled:bg-[#e7f2f1] disabled:cursor-not-allowed disabled:text-[#a9b1b7] max-[560px]:size-10"
+          onClick={onOpenRules}
+          title="Open rules"
+        >
+          <BookOpen size={18} />
+        </button>
         <button
           type="button"
           className="grid size-[42px] cursor-pointer place-items-center rounded-lg border border-[#cdd5d8] bg-white text-[#23313d] hover:enabled:bg-[#e7f2f1] disabled:cursor-not-allowed disabled:text-[#a9b1b7] max-[560px]:size-10"
