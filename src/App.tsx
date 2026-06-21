@@ -240,8 +240,6 @@ export default function App() {
       </section>
 
       <GameDetails
-        currentTurn={chessGame.currentTurn}
-        isGameOver={chessGame.isGameOver}
         captured={chessGame.captured}
         whiteMaterial={chessGame.whiteMaterial}
         blackMaterial={chessGame.blackMaterial}
