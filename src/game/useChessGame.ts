@@ -73,6 +73,7 @@ export function useChessGame() {
     canUndo: gameState.past.length > 0,
     captured,
     currentTurn: game.turn() as Color,
+    isGameOver: game.isGameOver() || gameState.phase !== 'playing',
     legalMoveCount: legalTargets.size,
     moveHistory,
     resetGame,

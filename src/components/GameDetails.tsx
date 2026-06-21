@@ -1,4 +1,4 @@
-import { Crosshair, ScrollText, Shield, Swords, Trophy } from 'lucide-react';
+import { Crosshair, ScrollText, Shield, Swords, Users } from 'lucide-react';
 import type { Color, Move, Piece, Square } from 'chess.js';
 import type { ReactNode } from 'react';
 import {
@@ -11,6 +11,7 @@ import { PieceIcon } from './PieceIcon';
 
 type GameDetailsProps = {
   currentTurn: Color;
+  isGameOver: boolean;
   captured: CapturedPieces;
   whiteMaterial: number;
   blackMaterial: number;
@@ -91,6 +92,43 @@ function TraitChip({ tone, children }: { tone: 'gold' | 'moss' | 'arcane' | 'blo
   );
 }
 
+function TurnRow({ color, currentTurn, showActive }: { color: Color; currentTurn: Color; showActive: boolean }) {
+  const active = showActive && color === currentTurn;
+
+  return (
+    <div
+      className={[
+        'flex min-h-10 items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border px-[var(--space-3)] py-[var(--space-2)]',
+        active
+          ? 'border-[var(--color-iron)] bg-[var(--color-iron)] text-[var(--color-candle)]'
+          : 'border-[var(--border-soft)] bg-[var(--surface-raised)] text-[var(--text-secondary)]',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-current={active ? 'true' : undefined}
+    >
+      <span className="inline-flex items-center gap-[var(--space-2)] text-[0.92rem] leading-[1.2] font-extrabold">
+        <span
+          className={[
+            'size-2.5 rounded-full border',
+            color === 'w' ? 'border-[var(--color-fog)] bg-white' : 'border-[var(--color-ink)] bg-[var(--color-ink)]',
+            active ? 'ring-2 ring-[var(--color-candle)]' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          aria-hidden="true"
+        />
+        {formatSide(color)}
+      </span>
+      {active && (
+        <span className="text-[0.72rem] leading-[1.2] font-extrabold text-[var(--color-candle)] uppercase">
+          To move
+        </span>
+      )}
+    </div>
+  );
+}
+
 function pieceName(piece: Piece | null) {
   if (!piece) return 'No piece selected';
 
@@ -108,6 +146,7 @@ function pieceName(piece: Piece | null) {
 
 export function GameDetails({
   currentTurn,
+  isGameOver,
   captured,
   whiteMaterial,
   blackMaterial,
@@ -116,19 +155,16 @@ export function GameDetails({
   selectedSquare,
   legalMoveCount,
 }: GameDetailsProps) {
+  const activeLabel = isGameOver ? 'Game over' : `${formatSide(currentTurn)} to move`;
+
   return (
     <aside className="flex min-w-0 flex-col gap-[var(--space-4)] self-start max-[1040px]:self-stretch" aria-label="Game details">
-      <section className="rounded-[var(--radius-lg)] border border-[var(--border-soft)] bg-[var(--surface-panel)] p-[18px] shadow-[var(--shadow-panel)]">
-        <div className="flex items-center gap-[var(--space-3)]">
-          <span className="grid size-10 place-items-center rounded-[var(--radius-md)] bg-[var(--color-iron)] text-[var(--color-candle)]">
-            <Trophy size={20} />
-          </span>
-          <div>
-            <span className="block text-[0.82rem] leading-[1.2] font-bold text-[var(--text-secondary)]">Current turn</span>
-            <strong className="block text-[1.35rem] leading-[1.25] text-[var(--color-ink)]">{formatSide(currentTurn)}</strong>
-          </div>
+      <Panel title="Players" icon={<Users size={17} />}>
+        <div className="grid gap-[var(--space-2)]" aria-label={activeLabel}>
+          <TurnRow color="w" currentTurn={currentTurn} showActive={!isGameOver} />
+          <TurnRow color="b" currentTurn={currentTurn} showActive={!isGameOver} />
         </div>
-      </section>
+      </Panel>
 
       <Panel title="Objective" icon={<Crosshair size={17} />}>
         <p className="m-0 text-[1rem] leading-[1.45] font-bold text-[var(--color-ink)]">Break the opposing king.</p>

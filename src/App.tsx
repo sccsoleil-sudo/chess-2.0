@@ -228,6 +228,8 @@ export default function App() {
       <section className="grid min-w-0 grid-rows-[auto_minmax(0,1fr)] gap-[var(--space-4)]" aria-label="Chess game">
         <GameHeader
           status={chessGame.status}
+          currentTurn={chessGame.currentTurn}
+          isGameOver={chessGame.isGameOver}
           canUndo={chessGame.canUndo}
           onOpenRules={() => setView('rules')}
           onUndo={chessGame.undoMove}
@@ -239,6 +241,7 @@ export default function App() {
 
       <GameDetails
         currentTurn={chessGame.currentTurn}
+        isGameOver={chessGame.isGameOver}
         captured={chessGame.captured}
         whiteMaterial={chessGame.whiteMaterial}
         blackMaterial={chessGame.blackMaterial}
