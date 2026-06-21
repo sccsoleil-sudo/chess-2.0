@@ -1,43 +1,46 @@
 import { useMemo, useState } from 'react';
-import { Chess, type Color, type Move, type Square } from 'chess.js';
+import { Chess, type Color, type Square } from 'chess.js';
 import {
+  attemptMove,
+  createInitialGameState,
   getBoardSquares,
   getCapturedPieces,
   getGameMessage,
   getLegalTargets,
-  getNextFenAfterMove,
-  getNextFenAfterUndo,
+  type GameState,
   materialScore,
+  resetGameState,
+  undoGameState,
 } from './chessLogic';
 
 export function useChessGame() {
-  const [fen, setFen] = useState(new Chess().fen());
+  const [gameState, setGameState] = useState(createInitialGameState);
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
   const [flipped, setFlipped] = useState(false);
 
-  const game = useMemo(() => new Chess(fen), [fen]);
-  const moveHistory = useMemo(() => game.history({ verbose: true }) as Move[], [game]);
-  const legalTargets = useMemo(() => getLegalTargets(game, selectedSquare), [game, selectedSquare]);
+  const game = useMemo(() => new Chess(gameState.fen), [gameState.fen]);
+  const moveHistory = gameState.moveHistory;
+  const legalTargets = useMemo(() => getLegalTargets(gameState, selectedSquare), [gameState, selectedSquare]);
   const boardSquares = useMemo(
-    () => getBoardSquares(game, flipped, selectedSquare, legalTargets),
-    [flipped, game, legalTargets, selectedSquare],
+    () => getBoardSquares(gameState, flipped, selectedSquare, legalTargets),
+    [flipped, gameState, legalTargets, selectedSquare],
   );
   const captured = useMemo(() => getCapturedPieces(moveHistory), [moveHistory]);
   const whiteMaterial = useMemo(() => materialScore(captured.w), [captured]);
   const blackMaterial = useMemo(() => materialScore(captured.b), [captured]);
   const selectedPiece = selectedSquare ? (game.get(selectedSquare) ?? null) : null;
 
-  function commitFen(nextFen: string) {
-    setFen(nextFen);
+  function commitGameState(nextState: GameState) {
+    setGameState(nextState);
     setSelectedSquare(null);
   }
 
   function resetGame() {
-    commitFen(new Chess().fen());
+    commitGameState(resetGameState());
   }
 
   function undoMove() {
-    commitFen(getNextFenAfterUndo(fen));
+    commitGameState(undoGameState(gameState));
   }
 
   function toggleBoard() {
@@ -45,12 +48,14 @@ export function useChessGame() {
   }
 
   function handleSquareClick(square: Square) {
-    if (game.isGameOver()) return;
+    if (game.isGameOver() || gameState.phase !== 'playing') return;
 
     const piece = game.get(square);
 
     if (selectedSquare && legalTargets.has(square)) {
-      commitFen(getNextFenAfterMove(fen, selectedSquare, square));
+      const attempt = attemptMove(gameState, { from: selectedSquare, to: square });
+
+      commitGameState(attempt.state);
       return;
     }
 
@@ -65,7 +70,7 @@ export function useChessGame() {
   return {
     blackMaterial,
     boardSquares,
-    canUndo: moveHistory.length > 0,
+    canUndo: gameState.past.length > 0,
     captured,
     currentTurn: game.turn() as Color,
     legalMoveCount: legalTargets.size,
@@ -73,7 +78,7 @@ export function useChessGame() {
     resetGame,
     selectedPiece,
     selectedSquare,
-    status: getGameMessage(game),
+    status: getGameMessage(gameState),
     toggleBoard,
     undoMove,
     whiteMaterial,
