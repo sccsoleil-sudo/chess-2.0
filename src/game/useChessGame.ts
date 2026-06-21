@@ -67,6 +67,7 @@ export function useChessGame() {
     canUndo: moveHistory.length > 0,
     captured,
     currentTurn: game.turn() as Color,
+    isGameOver: game.isGameOver(),
     moveHistory,
     resetGame,
     status: getGameMessage(game),

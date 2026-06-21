@@ -1,4 +1,3 @@
-import { Trophy } from 'lucide-react';
 import type { Color, Move } from 'chess.js';
 import {
   formatSide,
@@ -10,6 +9,7 @@ import {
 
 type GameDetailsProps = {
   currentTurn: Color;
+  isGameOver: boolean;
   captured: CapturedPieces;
   whiteMaterial: number;
   blackMaterial: number;
@@ -39,14 +39,54 @@ function CapturedRow({ label, pieces, advantage }: { label: string; pieces: Capt
   );
 }
 
-export function GameDetails({ currentTurn, captured, whiteMaterial, blackMaterial, moveHistory }: GameDetailsProps) {
+function TurnRow({ color, currentTurn, showActive }: { color: Color; currentTurn: Color; showActive: boolean }) {
+  const active = showActive && color === currentTurn;
+
+  return (
+    <div
+      className={[
+        'flex min-h-10 items-center justify-between gap-3 rounded-lg border px-3 py-2',
+        active ? 'border-[#263542] bg-[#263542] text-white' : 'border-[#d6dddf] bg-[#f7f4eb] text-[#68727d]',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-current={active ? 'true' : undefined}
+    >
+      <span className="inline-flex items-center gap-2 text-[0.92rem] font-extrabold">
+        <span
+          className={[
+            'size-2.5 rounded-full border',
+            color === 'w' ? 'border-[#9da7ad] bg-white' : 'border-[#111820] bg-[#111820]',
+            active ? 'ring-2 ring-[#f1c84b]' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          aria-hidden="true"
+        />
+        {formatSide(color)}
+      </span>
+      {active && <span className="text-[0.72rem] font-extrabold uppercase text-[#f1c84b]">To move</span>}
+    </div>
+  );
+}
+
+export function GameDetails({
+  currentTurn,
+  isGameOver,
+  captured,
+  whiteMaterial,
+  blackMaterial,
+  moveHistory,
+}: GameDetailsProps) {
+  const activeLabel = isGameOver ? 'Game over' : `${formatSide(currentTurn)} to move`;
+
   return (
     <aside className="flex min-w-0 flex-col gap-4 self-start max-[920px]:self-stretch" aria-label="Game details">
-      <div className="flex items-center gap-3 rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]">
-        <Trophy size={20} />
-        <div>
-          <span className="block text-[0.82rem] font-bold text-[#68727d]">Current turn</span>
-          <strong className="block text-[1.35rem] text-[#111820]">{formatSide(currentTurn)}</strong>
+      <div className="rounded-lg border border-[#d6dddf] bg-[#fffdfa] p-[18px] shadow-[0_10px_22px_rgb(32_38_46_/_8%)]">
+        <h2 className="mb-3 text-[0.98rem] font-bold text-[#24303b]">Players</h2>
+        <div className="grid gap-2" aria-label={activeLabel}>
+          <TurnRow color="w" currentTurn={currentTurn} showActive={!isGameOver} />
+          <TurnRow color="b" currentTurn={currentTurn} showActive={!isGameOver} />
         </div>
       </div>
 

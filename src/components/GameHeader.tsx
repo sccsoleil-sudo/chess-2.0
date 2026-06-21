@@ -1,7 +1,11 @@
+import type { Color } from 'chess.js';
 import { BookOpen, RotateCcw, RotateCw, SkipBack } from 'lucide-react';
+import { formatSide } from '../game/chessLogic';
 
 type GameHeaderProps = {
   status: string;
+  currentTurn: Color;
+  isGameOver: boolean;
   canUndo: boolean;
   onOpenRules: () => void;
   onUndo: () => void;
@@ -9,14 +13,71 @@ type GameHeaderProps = {
   onReset: () => void;
 };
 
-export function GameHeader({ status, canUndo, onOpenRules, onUndo, onFlipBoard, onReset }: GameHeaderProps) {
+function PlayerPill({ color, currentTurn, showActive }: { color: Color; currentTurn: Color; showActive: boolean }) {
+  const active = showActive && color === currentTurn;
+
+  return (
+    <span
+      className={[
+        'inline-flex h-9 min-w-[94px] items-center justify-center gap-2 rounded-lg border px-3 text-[0.88rem] font-extrabold transition-colors',
+        active
+          ? 'border-[#263542] bg-[#263542] text-white shadow-[0_8px_18px_rgb(32_38_46_/_16%)]'
+          : 'border-[#cdd5d8] bg-[#fffdfa] text-[#68727d]',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-current={active ? 'true' : undefined}
+    >
+      <span
+        className={[
+          'size-2.5 rounded-full border',
+          color === 'w' ? 'border-[#9da7ad] bg-white' : 'border-[#111820] bg-[#111820]',
+          active ? 'ring-2 ring-[#f1c84b]' : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+        aria-hidden="true"
+      />
+      {formatSide(color)}
+    </span>
+  );
+}
+
+export function GameHeader({
+  status,
+  currentTurn,
+  isGameOver,
+  canUndo,
+  onOpenRules,
+  onUndo,
+  onFlipBoard,
+  onReset,
+}: GameHeaderProps) {
+  const showTurn = !isGameOver;
+  const isCheck = status.includes('check');
+
   return (
     <div className="mb-5 flex items-start justify-between gap-5 max-[560px]:flex-col max-[560px]:items-stretch max-[560px]:gap-3.5">
       <div>
-        <p className="mb-1.5 text-[0.82rem] font-extrabold uppercase text-[#68727d]">Chess 2.0</p>
-        <h1 className="max-w-[760px] text-[clamp(2rem,6vw,4.25rem)] leading-[0.95] font-bold text-[#16202a]">
-          {status}
-        </h1>
+        <h1 className="mb-3 text-[clamp(1.55rem,4vw,2.35rem)] leading-none font-bold text-[#16202a]">Chess 2.0</h1>
+        <div className="flex flex-wrap items-center gap-2" role="status" aria-label={status}>
+          {showTurn ? (
+            <>
+              <span className="mr-1 text-[0.78rem] font-extrabold uppercase text-[#68727d]">To move</span>
+              <PlayerPill color="w" currentTurn={currentTurn} showActive={showTurn} />
+              <PlayerPill color="b" currentTurn={currentTurn} showActive={showTurn} />
+              {isCheck && (
+                <span className="inline-flex h-9 items-center rounded-lg border border-[#9f2d24] bg-[#fff1ed] px-3 text-[0.82rem] font-extrabold uppercase text-[#9f2d24]">
+                  Check
+                </span>
+              )}
+            </>
+          ) : (
+            <span className="inline-flex min-h-9 items-center rounded-lg border border-[#263542] bg-[#fffdfa] px-3 text-[0.95rem] font-extrabold text-[#16202a]">
+              {status}
+            </span>
+          )}
+        </div>
       </div>
       <div className="flex gap-2" aria-label="Game controls">
         <button
